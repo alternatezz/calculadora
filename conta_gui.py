@@ -82,10 +82,26 @@ def salvar_custos():
     except ValueError:
         messagebox.showerror("Erro", "Por favor, insira valores válidos.")
 
+# Função para alternar visibilidade do frame de custos adicionais
+def toggle_custos():
+    global custos_visivel
+    if custos_visivel:
+        frame_custos.grid_remove()
+        root.geometry("314x311")
+        toggle_button.config(text="+")
+    else:
+        frame_custos.grid()
+        root.geometry("313x596")
+        toggle_button.config(text="-")
+    custos_visivel = not custos_visivel
+
 # Configuração da janela principal
 root = tk.Tk()
 root.title("Calculadora de Preço de Venda")
-root.geometry("312x528")  # Ajustado para acomodar apenas os frames restantes
+root.geometry("313x596")  # Tamanho inicial com custos adicionais visíveis
+
+# Definir a janela como "topmost"
+root.attributes('-topmost', True)
 
 # Frame principal
 frame_principal = ttk.Frame(root, padding=10)
@@ -97,11 +113,11 @@ frame_preco_venda.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
 ttk.Label(frame_preco_venda, text="Preço de Custo:").grid(row=0, column=0, pady=5)
 entry_preco_custo = ttk.Entry(frame_preco_venda)
-entry_preco_custo.grid(row=0, column=1, pady=5)
+entry_preco_custo.grid(row=0, column=1, pady=5, sticky="ew")
 
 ttk.Label(frame_preco_venda, text="Markup Desejado (%):").grid(row=1, column=0, pady=5)
 entry_markup_desejado = ttk.Entry(frame_preco_venda)
-entry_markup_desejado.grid(row=1, column=1, pady=5)
+entry_markup_desejado.grid(row=1, column=1, pady=5, sticky="ew")
 
 ttk.Label(frame_preco_venda, text="Preço de Venda:").grid(row=2, column=0, pady=5)
 label_preco_venda = ttk.Label(frame_preco_venda, background="lightgrey", relief="sunken", anchor="center")
@@ -127,34 +143,42 @@ frame_custos.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
 ttk.Label(frame_custos, text="Taxa de Embalagem:").grid(row=0, column=0, pady=5)
 entry_taxa_embalagem = ttk.Entry(frame_custos)
-entry_taxa_embalagem.grid(row=0, column=1, pady=5)
+entry_taxa_embalagem.grid(row=0, column=1, pady=5, sticky="ew")
 entry_taxa_embalagem.insert(0, "4.50")
 
 ttk.Label(frame_custos, text="Imposto (%):").grid(row=1, column=0, pady=5)
 entry_imposto_percentual = ttk.Entry(frame_custos)
-entry_imposto_percentual.grid(row=1, column=1, pady=5)
+entry_imposto_percentual.grid(row=1, column=1, pady=5, sticky="ew")
 entry_imposto_percentual.insert(0, "4.00")
 
 ttk.Label(frame_custos, text="Comissão (%):").grid(row=2, column=0, pady=5)
 entry_comissao_percentual = ttk.Entry(frame_custos)
-entry_comissao_percentual.grid(row=2, column=1, pady=5)
+entry_comissao_percentual.grid(row=2, column=1, pady=5, sticky="ew")
 entry_comissao_percentual.insert(0, "20.00")
 
 ttk.Label(frame_custos, text="Operacional (%):").grid(row=3, column=0, pady=5)
 entry_operacional_percentual = ttk.Entry(frame_custos)
-entry_operacional_percentual.grid(row=3, column=1, pady=5)
+entry_operacional_percentual.grid(row=3, column=1, pady=5, sticky="ew")
 entry_operacional_percentual.insert(0, "13.00")
 
 ttk.Label(frame_custos, text="Frete:").grid(row=4, column=0, pady=5)
 entry_frete = ttk.Entry(frame_custos)
-entry_frete.grid(row=4, column=1, pady=5)
+entry_frete.grid(row=4, column=1, pady=5, sticky="ew")
 entry_frete.insert(0, "0.00")
 
 ttk.Button(frame_custos, text="Salvar Custos Adicionais", command=salvar_custos).grid(row=5, column=0, columnspan=2, pady=10, padx=10, sticky="we")
+
+# Botão para alternar visibilidade do frame de custos adicionais
+toggle_button = ttk.Button(root, text="-", command=toggle_custos, width=2)
+toggle_button.pack(side=tk.BOTTOM, pady=5)
 
 # Ajustar pesos das colunas e linhas para o redimensionamento correto
 frame_principal.columnconfigure(0, weight=1)
 frame_principal.rowconfigure(0, weight=1)
 frame_principal.rowconfigure(1, weight=1)
+frame_preco_venda.columnconfigure(1, weight=1)
+frame_custos.columnconfigure(1, weight=1)
+
+custos_visivel = True  # Estado inicial
 
 root.mainloop()
